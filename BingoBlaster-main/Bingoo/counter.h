@@ -1,5 +1,4 @@
-#ifndef COUNTER_H
-#define COUNTER_H
+#pragma once;
 
 
 class counter
@@ -8,4 +7,4 @@ public:
     counter();
 };
 
-#endif // COUNTER_H
+
