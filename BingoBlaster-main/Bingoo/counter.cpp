@@ -2,6 +2,8 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+using namespace std;
+
 int counter::highScore = 0;
 QMap<QString, int> counter::globalScores;
 
@@ -45,9 +47,9 @@ int main(int argc, char *argv[]) {
     player2.addPoints(20);
     player1.addPoints(15);
 
-    qDebug() << "Mikas Score:" << player1.getScore();
-    qDebug() << "Tims Score:" << player2.getScore();
-    qDebug() << "Persöhnlicher High Score:" << counter::getpersHighScore();
+    cout << "Mikas Score:" << player1.getScore();
+    cout << "Tims Score:" << player2.getScore();
+    cout << "Persöhnlicher High Score:" << counter::getpersHighScore();
 
     return a.exec();
 }
