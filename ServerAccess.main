@@ -1,0 +1,16 @@
+#include <QApplication>
+#include "Overlay.h"
+#include "ServerAccess.h"
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+    
+    Overlay overlay;
+    overlay.resize(300, 300);
+    overlay.show();
+    
+    ServerAccess server;
+    server.connectToServer("127.0.0.1", 12345);
+    
+    return app.exec();
+}
