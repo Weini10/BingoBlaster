@@ -1,0 +1,29 @@
+
+#ifndef widget_H
+#define widget_H
+
+#include <QMainWindow>
+#include <QString>
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class widget; }
+QT_END_NAMESPACE
+
+class widget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    widget(QWidget *parent = nullptr);
+    ~widget();
+
+private slots:
+    void onLoginClicked();  // Slot für den Login-Button
+
+private:
+    Ui::widget *ui;
+
+    bool isValidServerID(const QString &serverID);  // Methode zur Server ID Validierung
+};
+
+#endif // widget_H
