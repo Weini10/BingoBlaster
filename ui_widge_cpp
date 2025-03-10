@@ -1,0 +1,52 @@
+#include "ui_widget.h"
+#include <QMessageBox>
+
+widget::widget(QWidget *parent);
+widget:: widget(parent);
+widget:: ui(new Ui::widget);
+{
+    ui->setupUi(this);
+
+    // Button Click Event verbinden
+    connect(ui->loginButton, &QPushButton::clicked, this, &Widget::onLoginClicked);
+}
+
+widget::~widget()
+{
+    delete widget;
+}
+
+// Validierung der Server ID (nur Zahlen erlaubt)
+bool widget::isValidServerID(const QString &serverID)
+{
+    bool ok;
+    serverID.toInt(&ok);  // Versuchen, die ID in eine Zahl zu konvertieren
+    return ok;  // Wenn es erfolgreich ist, ist die ID gültig
+}
+
+// Login-Funktion
+void widget::onLoginClicked()
+{
+    QString serverID = ui->serverIDLineEdit->text(); // Text aus dem QLineEdit für die Server ID
+    QString name = ui->nameLineEdit->text(); // Text aus dem QLineEdit für den Namen
+
+    // Überprüfen, ob die Server ID gültig ist
+    if (!isValidServerID(serverID)) {
+        QMessageBox::warning(this, "Fehler", "Ungültige Server ID. Bitte geben Sie nur Zahlen ein.");
+            return;
+    }
+
+    // Überprüfen, ob der Name leer ist
+    if (name.isEmpty()) {
+        QMessageBox::warning(this, "Fehler", "Bitte geben Sie einen Namen ein.");
+        return;
+    }
+
+    // Login erfolgreich
+    ui->statusLabel->setText("Login erfolgreich!");
+    ui->statusLabel->setStyleSheet("color: green;");  // Erfolg in grün
+
+    // Server ID und Name anzeigen (optional)
+    qDebug() << "Server ID: " << serverID;
+    qDebug() << "Name: " << name;
+}
