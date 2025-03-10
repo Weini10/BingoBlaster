@@ -13,6 +13,29 @@
   <property name="windowTitle">
    <string>Widget</string>
   </property>
+  <widget class="QPushButton" name="Eingeben">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>80</y>
+     <width>75</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Eingeben</string>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="Eingabe">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>110</y>
+     <width>104</width>
+     <height>71</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
