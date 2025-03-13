@@ -1,33 +1,26 @@
-#include "ServerAccess.h"
+#ifndef WIDGET_H
+#define WIDGET_H
 
-ServerAccess::ServerAccess(QObject *parent) : QObject(parent) {
-    socket = new QTcpSocket(this);
-    connect(socket, &QTcpSocket::readyRead, this, &ServerAccess::onReadyRead);
-    connect(socket, &QTcpSocket::errorOccurred, this, &ServerAccess::onErrorOccurred);
-}
+#include <QWidget>
+#include <QTcpSocket>
+#include <QString>
 
-ServerAccess::~ServerAccess() {
-    delete socket;
-}
+class Widget : public QWidget {
+    Q_OBJECT
 
-void ServerAccess::connectToServer(const QString &host, quint16 port) {
-    socket->connectToHost(host, port);
-}
+private:
+    QTcpSocket *socket;
 
-void ServerAccess::sendData(const QString &data) {
-    if (socket->state() == QAbstractSocket::ConnectedState) {
-        socket->write(data.toUtf8());
-    }
-}
+public:
+    explicit Widget(QWidget *parent = nullptr);
+    ~Widget();
 
-QString ServerAccess::receiveData() {
-    return socket->readAll();
-}
+    void connectToServer(const QString &host, quint16 port);
+    void sendPlayerRegistration(const QString &playerName);
+    void requestPlayerData(const QString &playerName);
 
-void ServerAccess::onReadyRead() {
-    emit dataReceived(socket->readAll());
-}
+private slots:
+    void onServerResponse();
+};
 
-void ServerAccess::onErrorOccurred(QAbstractSocket::SocketError error) {
-    emit connectionError(socket->errorString());
-}
+#endif // WIDGET_H
