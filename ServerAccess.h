@@ -1,30 +1,26 @@
 #ifndef SERVERACCESS_H
 #define SERVERACCESS_H
 
+#include <QWidget>
 #include <QTcpSocket>
-#include <QObject>
+#include <QString>
 
-class ServerAccess : public QObject {
+class ServerAccess : public QWidget {
     Q_OBJECT
-    
+
 private:
     QTcpSocket *socket;
-    
+
 public:
-    explicit ServerAccess(QObject *parent = nullptr);
+    explicit ServerAccess(QWidget *parent = nullptr);
     ~ServerAccess();
-    
+
     void connectToServer(const QString &host, quint16 port);
-    void sendData(const QString &data);
-    QString receiveData();
-    
-signals:
-    void dataReceived(const QString &data);
-    void connectionError(const QString &error);
-    
+    void sendPlayerRegistration(const QString &playerName);
+    void requestPlayerData(const QString &playerName);
+
 private slots:
-    void onReadyRead();
-    void onErrorOccurred(QAbstractSocket::SocketError error);
+    void onServerResponse();
 };
 
 #endif // SERVERACCESS_H
