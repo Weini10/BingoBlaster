@@ -1,26 +1,42 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+#include "ServerAccess.h"
+#include <QDebug>
 
-#include <QWidget>
-#include <QTcpSocket>
-#include <QString>
+ServerAccess::ServerAccess(QWidget *parent) : QWidget(parent), socket(new QTcpSocket(this)) {
+    connect(socket, &QTcpSocket::readyRead, this, &ServerAccess::onServerResponse);
+}
 
-class Widget : public QWidget {
-    Q_OBJECT
+ServerAccess::~ServerAccess() {
+    socket->close();
+}
 
-private:
-    QTcpSocket *socket;
+void ServerAccess::connectToServer(const QString &host, quint16 port) {
+    socket->connectToHost(host, port);
+    if (!socket->waitForConnected(3000)) {
+        qDebug() << "Verbindung fehlgeschlagen:" << socket->errorString();
+    } else {
+        qDebug() << "Erfolgreich mit Server verbunden.";
+    }
+}
 
-public:
-    explicit Widget(QWidget *parent = nullptr);
-    ~Widget();
+void ServerAccess::sendPlayerRegistration(const QString &playerName) {
+    if (socket->state() == QAbstractSocket::ConnectedState) {
+        QByteArray data = "REGISTER:" + playerName.toUtf8();
+        socket->write(data);
+    } else {
+        qDebug() << "Nicht mit Server verbunden!";
+    }
+}
 
-    void connectToServer(const QString &host, quint16 port);
-    void sendPlayerRegistration(const QString &playerName);
-    void requestPlayerData(const QString &playerName);
+void ServerAccess::requestPlayerData(const QString &playerName) {
+    if (socket->state() == QAbstractSocket::ConnectedState) {
+        QByteArray data = "GET_PLAYER:" + playerName.toUtf8();
+        socket->write(data);
+    } else {
+        qDebug() << "Nicht mit Server verbunden!";
+    }
+}
 
-private slots:
-    void onServerResponse();
-};
-
-#endif // WIDGET_H
+void ServerAccess::onServerResponse() {
+    QByteArray response = socket->readAll();
+    qDebug() << "Antwort vom Server:" << response;
+}
