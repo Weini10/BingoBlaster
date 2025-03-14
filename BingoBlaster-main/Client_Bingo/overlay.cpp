@@ -1,5 +1,6 @@
 #include "Overlay.h"
 #include <QRandomGenerator>
+#include <vector>
 
 Overlay::Overlay(QWidget *parent) : QWidget(parent), score(0) {
     generateNumbers();
@@ -13,6 +14,8 @@ void Overlay::generateNumbers() {
         }
     }
 }
+
+
 
 void Overlay::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
@@ -48,11 +51,45 @@ void Overlay::mousePressEvent(QMouseEvent *event) {
 
         // Punktzahl aktualisieren
         if (marked[row][col]) {
-            score += grid[row][col];
+            score ++; grid[row][col];
         } else {
-            score -= grid[row][col];
+            score --; grid[row][col];
         }
 
+        // Bonuspunkte berechnen (horizontal + vertikal)
+        checkForBonus();
+
         update();
+    }
+}
+
+// Methode zur Überprüfung von vollständigen Reihen oder Spalten
+void Overlay::checkForBonus() {
+    // Prüfen, ob eine komplette Zeile markiert ist
+    for (int i = 0; i < SIZE; ++i) {
+        bool fullRowMarked = true;
+        for (int j = 0; j < SIZE; ++j) {
+            if (!marked[i][j]) {
+                fullRowMarked = false;
+                break;
+            }
+        }
+        if (fullRowMarked) {
+            score += 10;  // Bonus für vollständige Reihe
+        }
+    }
+
+    // Prüfen, ob eine komplette Spalte markiert ist
+    for (int j = 0; j < SIZE; ++j) {
+        bool fullColumnMarked = true;
+        for (int i = 0; i < SIZE; ++i) {
+            if (!marked[i][j]) {
+                fullColumnMarked = false;
+                break;
+            }
+        }
+        if (fullColumnMarked) {
+            score += 10;  // Bonus für vollständige Spalte
+        }
     }
 }
